@@ -33,24 +33,28 @@ public class App {
 
     }
 
-    static void captureCheck(int[][] g, int r, int c, int t, int n) {
+    static void captureCheck(int[][] board, boolean[][] visited, int r, int c, int t, int n) {
 
-        if(r < 0 || r >= g.length ||  c < 0 || c >= g[0].length || g[r][c] != t || g[r][c]==n) {
+        if(r < 0 || r >= board.length ||  c < 0 || c >= board[0].length || board[r][c] != t || board[r][c]==n) {
             return;
         }
+        if(visited == null || visited.length != board.length || visited[0].length != board[0].length) {
+            return;
+        }
+        if(visited[r][c] || board[r][c] != n) return;
 
-        g[r][c] = n;
+        visited[r][c] = true;
+        board[r][c] = n;
 
-        captureCheck (g, r+1, c, t, n);
-        captureCheck (g, r-1, c, t, n);
-        captureCheck (g, r, c+1, t, n);
-        captureCheck (g, r, c-1, t, n);
+        captureCheck (board, visited, r+1, c, t, n);
+        captureCheck (board, visited, r-1, c, t, n);
+        captureCheck (board, visited, r, c+1, t, n);
+        captureCheck (board, visited, r, c-1, t, n);
     }
 
     public static void main(String[] args) throws Exception {
         boolean playing = true;
         boolean turn = true;
-        boolean valid = true;
         int x = 1;
         int y = 1;
         Scanner scn = new Scanner(System.in);
