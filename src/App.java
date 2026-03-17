@@ -89,7 +89,7 @@ public class App {
         /*
         if I call hasLiberties here pretending that the space im checking in this function is
         occupied with pieceColor and it returns false, then I can just return false on this
-        function too, then suicideCheck will work for large groups of surrounded pieces.
+        function too, then suicideCheck might work for large groups of surrounded pieces.
         */
 
         if(x < 0 || x >= board.length || y < 0 || y >= board.length) return false;
