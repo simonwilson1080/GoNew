@@ -20,6 +20,7 @@ public class App {
     static int whiteCaptured = 0;
 
     static void printGoBoard(String[][] goBoard) {
+
         for(int i = 0; i < goBoard.length; i++){
             for(int j = 0; j < goBoard.length; j++){
                 if (goBoard[i][j] == null){
@@ -53,10 +54,10 @@ public class App {
         visited[x][y] = true;
 
         //check adjacent pieces
-        boolean hasLiberty = hasLiberties(board, visited, x+1, y, pieceColor) ||
-                            hasLiberties(board, visited, x-1, y, pieceColor) ||
-                            hasLiberties(board, visited, x, y+1, pieceColor) ||
-                            hasLiberties(board, visited, x, y-1, pieceColor);
+        boolean hasLiberty =    hasLiberties(board, visited, x+1, y, pieceColor) ||
+                                hasLiberties(board, visited, x-1, y, pieceColor) ||
+                                hasLiberties(board, visited, x, y+1, pieceColor) ||
+                                hasLiberties(board, visited, x, y-1, pieceColor);
 
         return hasLiberty;
     }
@@ -84,6 +85,19 @@ public class App {
     }
 
 
+    static boolean suicideCheck(String[][] board, int x, int y, String pieceColor) {
+
+        if(x < 0 || x >= board.length || y < 0 || y >= board.length) return false;
+
+        String opp = (pieceColor == "@") ? "o" : "@";
+
+        if(board[x+1][y] == opp && board[x-1][y] == opp && board[x][y+1] == opp && board[x][y-1] == opp) {
+                return true;
+        }
+        return false;
+    }
+
+
     static void captureCheck(String[][] board) {
         //check all positions on board
         for(int i = 0; i < board.length; i++) {
@@ -91,8 +105,9 @@ public class App {
                 if(board[i][j] != null) {
                     String pieceColor = board[i][j];
                     
-                    //reset visited
                     boolean[][] tempVisited = new boolean[board.length][board[0].length];
+
+                    //call a function for suicide check. if suicide, make the player choose somewhere else
                     
                     //check for liberties and delete the groupof pieces
                     if(!hasLiberties(board, tempVisited, i, j, pieceColor)) {
@@ -131,8 +146,8 @@ public class App {
             String temp = goBoard[y-1][x-1];
 
             if (turn == true) {
-
-                if(temp == null) {
+                if(suicideCheck(goBoard, y-1, x-1, "@") == true) System.out.println("Illegal Move. Try again.");
+                else if(temp == null) {
                     goBoard[y-1][x-1] = "@";
                     turn = !turn;
                 }
@@ -143,8 +158,8 @@ public class App {
             }
 
             else if (turn == false) {
-
-                if(temp == null) {
+                if(suicideCheck(goBoard, y-1, x-1, "o") == true) System.out.println("Illegal Move. Try again.");
+                else if(temp == null) {
                     goBoard[y-1][x-1] = "o";
                     turn = !turn;
                 }
