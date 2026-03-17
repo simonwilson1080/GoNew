@@ -66,23 +66,22 @@ public class App {
 
 
     static int removeGroup(String[][] board, int x, int y, String pieceColor) {
-        // Boundary check
+
         if(x < 0 || x >= board.length || y < 0 || y >= board.length) {
             return 0;
         }
 
         String cell = board[x][y];
 
-        // If cell doesn't match the piece color or is empty, stop
         if(cell == null || !cell.equals(pieceColor)) {
             return 0;
         }
 
-        // Remove the piece
+        //remove piece
         board[x][y] = null;
         int count = 1;
 
-        // Recursively remove all connected pieces of the same color
+        //remove connected pieces of the same color
         count += removeGroup(board, x+1, y, pieceColor);
         count += removeGroup(board, x-1, y, pieceColor);
         count += removeGroup(board, x, y+1, pieceColor);
@@ -145,36 +144,25 @@ public class App {
             String temp = goBoard[y-1][x-1];
 
             if (turn == true) {
-                switch (temp) { 
-                case null:
+
+                if(temp == null) {
                     goBoard[y-1][x-1] = "@";
                     turn = !turn;
-                    break;
-                case "o":
+                }
+                else if("o" == temp || "@" == temp) {
                     System.out.println("INVALID PLACEMENT - Try Again");
-                    break;
-                case "@":
-                    System.out.println("INVALID PLACEMENT - Try Again");
-                    break;
-                default:
-                    break;
                 }
                 captureCheck(goBoard);
             }
+
             else if (turn == false) {
-                switch (temp) { 
-                case null:
+                
+                if(temp == null) {
                     goBoard[y-1][x-1] = "o";
                     turn = !turn;
-                    break;
-                case "o":
+                }
+                else if("o" == temp || "@" == temp) {
                     System.out.println("INVALID PLACEMENT - Try Again");
-                    break;
-                case "@":
-                    System.out.println("INVALID PLACEMENT - Try Again");
-                    break;
-                default:
-                    break;
                 }
                 captureCheck(goBoard);
             }
