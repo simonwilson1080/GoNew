@@ -42,20 +42,17 @@ public class App {
 
     static boolean hasLiberties(String[][] board, boolean[][] visited, int x, int y, String pieceColor) {
 
-        if(x < 0 || x >= board.length || y < 0 || y >= board.length) {
-            return false;
-        }
+        if(x < 0 || x >= board.length || y < 0 || y >= board.length) return false;
 
         String cell = board[x][y];
 
         if(cell == null) return true;
 
-        //if cell is already visited or is not the original piece color
-        if(!cell.equals(pieceColor) || visited[x][y]) return false;
+        if(cell != pieceColor || visited[x][y]) return false;
 
         visited[x][y] = true;
 
-        //adjacency check
+        //check adjacent pieces
         boolean hasLiberty = hasLiberties(board, visited, x+1, y, pieceColor) ||
                             hasLiberties(board, visited, x-1, y, pieceColor) ||
                             hasLiberties(board, visited, x, y+1, pieceColor) ||
@@ -67,21 +64,17 @@ public class App {
 
     static int removeGroup(String[][] board, int x, int y, String pieceColor) {
 
-        if(x < 0 || x >= board.length || y < 0 || y >= board.length) {
-            return 0;
-        }
+        if(x < 0 || x >= board.length || y < 0 || y >= board.length) return 0;
 
         String cell = board[x][y];
 
-        if(cell == null || !cell.equals(pieceColor)) {
-            return 0;
-        }
+        if(cell == null || cell != pieceColor) return 0;
 
         //remove piece
         board[x][y] = null;
         int count = 1;
 
-        //remove connected pieces of the same color
+        //remove connected pieces that are the same color
         count += removeGroup(board, x+1, y, pieceColor);
         count += removeGroup(board, x-1, y, pieceColor);
         count += removeGroup(board, x, y+1, pieceColor);
@@ -92,7 +85,7 @@ public class App {
 
 
     static void captureCheck(String[][] board) {
-        //check all positions on the board
+        //check all positions on board
         for(int i = 0; i < board.length; i++) {
             for(int j = 0; j < board[i].length; j++) {
                 if(board[i][j] != null) {
@@ -101,19 +94,13 @@ public class App {
                     //reset visited
                     boolean[][] tempVisited = new boolean[board.length][board[0].length];
                     
-                    //check for liberties and delete the groupof selected pieces
+                    //check for liberties and delete the groupof pieces
                     if(!hasLiberties(board, tempVisited, i, j, pieceColor)) {
-                        //remove it
                         int capturedCount = removeGroup(board, i, j, pieceColor);
                         
                         //add captured pieces to opponents pile
-                        if(pieceColor.equals("@")) {
-                            whiteCaptured += capturedCount;
-                            System.out.println("Black group captured! White captures " + capturedCount + " piece(s).");
-                        } else if(pieceColor.equals("o")) {
-                            blackCaptured += capturedCount;
-                            System.out.println("White group captured! Black captures " + capturedCount + " piece(s).");
-                        }
+                        if(pieceColor == "@") whiteCaptured += capturedCount;
+                        else if(pieceColor =="o") blackCaptured += capturedCount;
                     }
                 }
             }
@@ -156,7 +143,7 @@ public class App {
             }
 
             else if (turn == false) {
-                
+
                 if(temp == null) {
                     goBoard[y-1][x-1] = "o";
                     turn = !turn;
