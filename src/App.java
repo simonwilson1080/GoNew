@@ -53,7 +53,7 @@ public class App {
 
         visited[x][y] = true;
 
-        //check adjacent pieces
+        // check adjacent pieces
         boolean hasLiberty =    hasLiberties(board, visited, x+1, y, pieceColor) ||
                                 hasLiberties(board, visited, x-1, y, pieceColor) ||
                                 hasLiberties(board, visited, x, y+1, pieceColor) ||
@@ -71,11 +71,11 @@ public class App {
 
         if(cell == null || cell != pieceColor) return 0;
 
-        //remove piece
+        // remove piece
         board[x][y] = null;
         int count = 1;
 
-        //remove connected pieces that are the same color
+        // remove connected pieces that are the same color
         count += removeGroup(board, x+1, y, pieceColor);
         count += removeGroup(board, x-1, y, pieceColor);
         count += removeGroup(board, x, y+1, pieceColor);
@@ -86,6 +86,11 @@ public class App {
 
 
     static boolean suicideCheck(String[][] board, int x, int y, String pieceColor) {
+        /*
+        if I call hasLiberties here pretending that the space im checking in this function is
+        occupied with pieceColor and it returns false, then I can just return false on this
+        function too, then suicideCheck will work for large groups of surrounded pieces.
+        */
 
         if(x < 0 || x >= board.length || y < 0 || y >= board.length) return false;
 
@@ -99,7 +104,7 @@ public class App {
 
 
     static void captureCheck(String[][] board) {
-        //check all positions on board
+        // check all positions on board
         for(int i = 0; i < board.length; i++) {
             for(int j = 0; j < board[i].length; j++) {
                 if(board[i][j] != null) {
@@ -107,13 +112,13 @@ public class App {
                     
                     boolean[][] tempVisited = new boolean[board.length][board[0].length];
 
-                    //call a function for suicide check. if suicide, make the player choose somewhere else
+                    // call a function for suicide check. if suicide, make the player choose somewhere else
                     
-                    //check for liberties and delete the groupof pieces
+                    // check for liberties and delete the groupof pieces
                     if(!hasLiberties(board, tempVisited, i, j, pieceColor)) {
                         int capturedCount = removeGroup(board, i, j, pieceColor);
                         
-                        //add captured pieces to opponents pile
+                        // add captured pieces to opponents pile
                         if(pieceColor == "@") whiteCaptured += capturedCount;
                         else if(pieceColor =="o") blackCaptured += capturedCount;
                     }
