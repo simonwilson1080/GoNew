@@ -8,18 +8,18 @@ import java.util.Scanner;
 
 public class App {
 
-    //static String[][] goBoard = new String[9][9];
-    static String[][] goBoard = {
-                                    {null,null,null,null,null,null,null,null,null},
-                                    {null,null,null,null,null,null,null,null,null},
-                                    {null,null,null,null,null,null,null,null,null},
-                                    {null,null,null,null,"@",null,null,null,null},
-                                    {null,null,null,"@",null,"@",null,null,null},
-                                    {null,null,null,null,"@",null,null,null,null},
-                                    {null,null,null,null,null,null,null,null,null},
-                                    {null,null,null,null,null,null,null,null,null},
-                                    {null,null,null,null,null,null,null,null,null}
-                                };
+    static String[][] goBoard = new String[9][9];
+    // static String[][] goBoard = {
+    //                                 {null,null,null,null,null,null,null,null,null},
+    //                                 {null,null,null,null,null,null,null,null,null},
+    //                                 {null,null,null,null,null,null,null,null,null},
+    //                                 {null,null,null,null,"@",null,null,null,null},
+    //                                 {null,null,null,"@",null,"@",null,null,null},
+    //                                 {null,null,null,null,"@",null,null,null,null},
+    //                                 {null,null,null,null,null,null,null,null,null},
+    //                                 {null,null,null,null,null,null,null,null,null},
+    //                                 {null,null,null,null,null,null,null,null,null}
+    //                             };
 
     static boolean[][] visited = new boolean[9][9];
     static int blackCaptured = 0;
