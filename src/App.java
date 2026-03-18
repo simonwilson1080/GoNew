@@ -1,16 +1,22 @@
+/***
+ * Author: Simon Wilson
+ * Description: Go Simulator with basic rules and no territory scoring.
+ * Suicide Check is there but only for basic cases and fails on edge cases.
+ ***/
+
 import java.util.Scanner;
 
 public class App {
 
     //static String[][] goBoard = new String[9][9];
     static String[][] goBoard = {
-                                    {null,null,"@","@",null,null,null,null,null},
-                                    {null,"@","o","o","@",null,null,null,null},
-                                    {null,"@","o",null,"o","@",null,null,null},
-                                    {null,"@","o","o","o","@",null,null,null},
-                                    {null,"@","o",null,"o","@",null,null,null},
-                                    {null,null,"@","o","o","@",null,null,null},
-                                    {null,null,null,"@","@",null,null,null,null},
+                                    {null,null,null,null,null,null,null,null,null},
+                                    {null,null,null,null,null,null,null,null,null},
+                                    {null,null,null,null,null,null,null,null,null},
+                                    {null,null,null,null,"@",null,null,null,null},
+                                    {null,null,null,"@",null,"@",null,null,null},
+                                    {null,null,null,null,"@",null,null,null,null},
+                                    {null,null,null,null,null,null,null,null,null},
                                     {null,null,null,null,null,null,null,null,null},
                                     {null,null,null,null,null,null,null,null,null}
                                 };
@@ -23,13 +29,13 @@ public class App {
 
         for(int i = 0; i < goBoard.length; i++){
             for(int j = 0; j < goBoard.length; j++){
-                if (goBoard[i][j] == null){
+                if(goBoard[i][j] == null){
                     System.out.print(" + ");
                 }
-                else if (goBoard[i][j] == "o"){
+                else if(goBoard[i][j] == "o"){
                     System.out.print(" o ");
                 }
-                else if (goBoard[i][j] == "@"){
+                else if(goBoard[i][j] == "@"){
                     System.out.print(" @ ");
                 }
                 else{
@@ -43,7 +49,7 @@ public class App {
 
     static boolean hasLiberties(String[][] board, boolean[][] visited, int x, int y, String pieceColor) {
 
-        if(x < 0 || x >= board.length || y < 0 || y >= board.length) return false;
+        if(x < 0 || x > board.length || y < 0 || y > board.length) return false;
 
         String cell = board[x][y];
 
@@ -88,18 +94,19 @@ public class App {
     static boolean suicideCheck(String[][] board, int x, int y, String pieceColor) {
         /*
         if I call hasLiberties here pretending that the space im checking in this function is
-        occupied with pieceColor and it returns false, then I can just return false on this
-        function too, then suicideCheck might work for large groups of surrounded pieces.
+        occupied with pieceColor and it returns false, then I can just return true on this
+        function, then suicideCheck might work for large groups of surrounded pieces.
         */
 
-        if(x < 0 || x >= board.length || y < 0 || y >= board.length) return false;
+        if(x < 0 || x > board.length || y < 0 || y > board.length) return false;
 
         String opp = (pieceColor == "@") ? "o" : "@";
 
-        if(board[x+1][y] == opp && board[x-1][y] == opp && board[x][y+1] == opp && board[x][y-1] == opp) {
+        if((board[x+1][y] == opp || x+1 > board.length) && (board[x-1][y] == opp || x-1 < 0) && (board[x][y+1] == opp || y+1 > board.length) && (board[x][y-1] == opp || y-1 < 0)) {
                 return true;
         }
         return false;
+        //function works but fails on edge cases...
     }
 
 
@@ -111,8 +118,6 @@ public class App {
                     String pieceColor = board[i][j];
                     
                     boolean[][] tempVisited = new boolean[board.length][board[0].length];
-
-                    // call a function for suicide check. if suicide, make the player choose somewhere else
                     
                     // check for liberties and delete the groupof pieces
                     if(!hasLiberties(board, tempVisited, i, j, pieceColor)) {
@@ -125,17 +130,17 @@ public class App {
                 }
             }
         }
-        System.out.println("Black captured: " + blackCaptured + " | White captured: " + whiteCaptured);
+        System.out.println("Black capture points: " + blackCaptured + " | White capture points: " + whiteCaptured);
     }
 
 
     public static void main(String[] args) throws Exception {
+
         boolean playing = true;
         boolean turn = true;
         int x = 1;
         int y = 1;
         Scanner scn = new Scanner(System.in);
-
 
         while (playing) {
             printGoBoard(goBoard);
@@ -151,7 +156,7 @@ public class App {
             String temp = goBoard[y-1][x-1];
 
             if (turn == true) {
-                if(suicideCheck(goBoard, y-1, x-1, "@") == true) System.out.println("Illegal Move. Try again.");
+                if(suicideCheck(goBoard, x-1, y-1, "@") == true) System.out.println("Illegal Move. Try again.");
                 else if(temp == null) {
                     goBoard[y-1][x-1] = "@";
                     turn = !turn;
@@ -163,7 +168,7 @@ public class App {
             }
 
             else if (turn == false) {
-                if(suicideCheck(goBoard, y-1, x-1, "o") == true) System.out.println("Illegal Move. Try again.");
+                if(suicideCheck(goBoard, x-1, y-1, "o") == true) System.out.println("Illegal Move. Try again.");
                 else if(temp == null) {
                     goBoard[y-1][x-1] = "o";
                     turn = !turn;
